@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'sell-icon';
-  src: url('fonts/sell-icon.eot?tmfrhj');
-  src: url('fonts/sell-icon.eot?tmfrhj#iefix') format('embedded-opentype'), url('fonts/sell-icon.ttf?tmfrhj') format('truetype'), url('fonts/sell-icon.woff?tmfrhj') format('woff'), url('fonts/sell-icon.svg?tmfrhj#sell-icon') format('svg');
+  src: url('../fonts/sell-icon.eot?tmfrhj');
+  src: url('../fonts/sell-icon.eot?tmfrhj#iefix') format('embedded-opentype'), url('../fonts/sell-icon.ttf?tmfrhj') format('truetype'), url('../fonts/sell-icon.woff?tmfrhj') format('woff'), url('../fonts/sell-icon.svg?tmfrhj#sell-icon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
