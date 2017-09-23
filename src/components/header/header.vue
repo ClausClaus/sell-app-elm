@@ -90,7 +90,12 @@ export default {
   components: {
     star,
   },
-  props: ['seller']
+  props: {
+    seller: {
+      type: Object,
+      required: true
+    }
+  }
 }
 </script>
 <style lang="less" type="text/less" rel="stylesheet/less">

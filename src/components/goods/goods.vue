@@ -32,7 +32,11 @@
 											<span class="now">￥{{food.price}}</span>
 											<span v-show="food.oldPrice" class="old-price">￥{{food.oldPrice}}</span>
 										</div>
+										<div class="cartcontrol-wrapper">
+											<cartControl :food="food"></cartControl>
+										</div>
 									</div>
+
 								</li>
 							</template>
 						</ul>
@@ -40,12 +44,13 @@
 				</template>
 			</ul>
 		</div>
-		<shopCart></shopCart>
+		<shopCart :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shopCart>
 	</div>
 </template>
 <script type="text/ecmascript-6">
 import BScroll from 'better-scroll';
 import shopCart from '../container/shopCart/shopCart';
+import cartControl from '../container/cartControl/cartControl';
 const ERR_OK = 0;
 export default {
 	data() {
@@ -62,6 +67,7 @@ export default {
 				res = res.body;
 				if (res.errno === ERR_OK) {
 					this.goods = res.data;
+					this.$set(this.goods);
 					this.$nextTick(() => {
 						this._initScroll();
 						this._calclateHeight();
@@ -80,10 +86,13 @@ export default {
 		},
 		_initScroll() {
 			this.menuScroll = new BScroll(this.$refs.menuWrapper, {
-				click: true
+				click: true,
+				tap:true
 			});
 			this.foodScroll = new BScroll(this.$refs.foodWrapper, {
-				probeType: 3
+				probeType: 3,
+				click: true,
+				tap:true
 			});
 			this.foodScroll.on('scroll', (pos) => {
 				this.scrollY = Math.abs(Math.round(pos.y));
@@ -110,12 +119,29 @@ export default {
 				}
 			}
 			return 0;
+		},
+		selectFoods() {
+			let foods = [];
+			this.goods.forEach(function(good) {
+				good.foods.forEach(function(food) {
+					if (!!food.count) {
+						foods.push(food);
+					}
+				});
+			});
+			return foods;
 		}
 	},
 	components: {
 		shopCart,
+		cartControl
 	},
-	props: ['seller']
+	props: {
+		seller: {
+			type: Object,
+			required: true
+		}
+	}
 }
 </script>
 <style lang="less" type="text/less" rel="stylesheet/less">
@@ -246,6 +272,11 @@ export default {
 						line-height: 14px;
 						color: rgb(147, 153, 159);
 					}
+				}
+				.cartcontrol-wrapper {
+					position: absolute;
+					right: 0;
+					bottom: 8px;
 				}
 			}
 		}

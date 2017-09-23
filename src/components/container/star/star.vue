@@ -37,7 +37,15 @@ export default {
       return result;
     }
   },
-  props: ['size', 'score']
+  props: {
+    size: {
+      type: Number,
+      required: true
+    },
+    score: {
+      type: Number
+    }
+  }
 }
 </script>
 <style lang="less" type="text/less" rel="stylesheet/less">
