@@ -11,6 +11,7 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
+import Connect from '../../Connect'; // 兄弟组件之间的通信，中间件Vue实例
 export default {
   data() {
     return {
@@ -27,6 +28,7 @@ export default {
       } else {
         this.food.count++;
       }
+      Connect.$emit('addCart', event.target);
     },
     decreaseCart(event) {
       if (this.food.count > 0) {
@@ -91,6 +93,6 @@ export default {
     color: rgb(147, 153, 159);
     font-size: 12px;
   }
-  .cart-add {}
+  // .cart-add {}
 }
 </style>
