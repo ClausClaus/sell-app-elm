@@ -87,12 +87,12 @@ export default {
 		_initScroll() {
 			this.menuScroll = new BScroll(this.$refs.menuWrapper, {
 				click: true,
-				tap:true
+				tap: true
 			});
 			this.foodScroll = new BScroll(this.$refs.foodWrapper, {
 				probeType: 3,
 				click: true,
-				tap:true
+				tap: true
 			});
 			this.foodScroll.on('scroll', (pos) => {
 				this.scrollY = Math.abs(Math.round(pos.y));
