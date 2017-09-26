@@ -88,6 +88,18 @@ export default {
         }
       })
     },
+    empty() {
+      this.selectFoods.forEach(function(food) {
+        food.count = 0;
+      });
+    },
+    hideList() {
+      this.fold = true;
+    },
+    pay() {
+      if (this.totalPrice < this.minPrice) return;
+      window.alert(`需要支付${this.totalPrice}元`);
+    },
     // 动画函数三个钩子
     ballBeforeEnter(el) {
       let count = this.balls.length;
@@ -113,7 +125,7 @@ export default {
       this.$nextTick(() => {
         el.style.webkitTransform = 'translate3d(0,0,0)';
         el.style.transform = 'translate3d(0,0,0)';
-        let inner = el.getElementsByClassName('inner-hook')[0];
+        let inner = el.getElementsByClassName('inner-hook')[0]; 
         inner.style.webkitTransform = 'translate3d(0,0,0)';
         inner.style.transform = 'translate3d(0,0,0)';
       });
@@ -124,22 +136,11 @@ export default {
       if (ball) {
         setTimeout(function() {
           ball.show = false;
-          el.style.display = 'none';
+          // el.style.display = 'none';
         }, 400)
       }
-    },
-    empty() {
-      this.selectFoods.forEach(function(food) {
-        food.count = 0;
-      });
-    },
-    hideList() {
-      this.fold = true;
-    },
-    pay() {
-      if (this.totalPrice < this.minPrice) return;
-      window.alert(`需要支付${this.totalPrice}元`);
     }
+
   },
   computed: {
     totalPrice() {
@@ -414,7 +415,6 @@ export default {
     width: 100%;
     height: 100%;
     z-index: -2;
-    backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     background-color: rgba(7, 17, 27, .6);
     &.fade-enter-active,

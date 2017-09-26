@@ -17,7 +17,7 @@
 						<h1 class="title">{{item.name}}</h1>
 						<ul>
 							<template v-for="(food,index) in item.foods">
-								<li class="food-item" :key="index">
+								<li class="food-item" :key="index" @click="selectedFood(food,$event)">
 									<div class="icon">
 										<img :src="food.icon" width="57" height="57">
 									</div>
@@ -36,7 +36,6 @@
 											<cartControl :food="food"></cartControl>
 										</div>
 									</div>
-
 								</li>
 							</template>
 						</ul>
@@ -45,12 +44,14 @@
 			</ul>
 		</div>
 		<shopCart :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shopCart>
+		<food :food="choiceFood" ref="food"></food>
 	</div>
 </template>
 <script type="text/ecmascript-6">
 import BScroll from 'better-scroll';
 import shopCart from '../container/shopCart/shopCart';
 import cartControl from '../container/cartControl/cartControl';
+import Food from '../food/food';
 const ERR_OK = 0;
 export default {
 	data() {
@@ -58,7 +59,8 @@ export default {
 			goods: [],
 			classMap: ['decrease', 'discount', 'guarantee', 'invoice', 'special'],
 			listHeight: [],
-			scrollY: 0
+			scrollY: 0,
+			choiceFood: {}
 		}
 	},
 	created() {
@@ -78,6 +80,11 @@ export default {
 			})
 	},
 	methods: {
+		selectedFood(food, event) {
+			if (!event._constructed) return;
+			this.choiceFood = food;
+			this.$refs.food.show();
+		},
 		selectMenu(event, index) {
 			if (!event._constructed) return;
 			let foodList = this.$refs.foodWrapper.getElementsByClassName('food-list-hook');
@@ -134,7 +141,8 @@ export default {
 	},
 	components: {
 		shopCart,
-		cartControl
+		cartControl,
+		Food
 	},
 	props: {
 		seller: {
