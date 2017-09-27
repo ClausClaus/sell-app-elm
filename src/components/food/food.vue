@@ -65,7 +65,7 @@ import Connect from '../Connect';
 import cartControl from '../container/cartControl/cartControl';
 import split from '../container/split/split';
 import ratingSelect from '../container/ratingselect/ratingselect';
-import {formatDate} from '../../common/js/date'; // 日期格式化组件
+import { formatDate } from '../../common/js/date'; // 日期格式化组件
 const POSITIVE = 0; // 好评
 const NEGATIVE = 1; // 差评
 const ALL = 2; // 全部
@@ -83,29 +83,32 @@ export default {
     }
   },
   created() {
-    // 这里的两个Connect根据子组件发射的数据的来设置数据，而一旦数据发生变化。绑定在评论列表上的needShow方法会根据函数的执行结果判断显示和隐藏哪些数据
-    Connect.$on('change.selectType', (type) => {
-      this.selectType = type;
-      this.$nextTick(() => {
-        this.foodScroll.refresh();
-      })
-    });
-    Connect.$on('change.onlyContent', (onlyContent) => {
-      this.onlyContent = onlyContent;
-      this.$nextTick(() => {
-        this.foodScroll.refresh();
-      })
-    });
+    this._middlewareChange();
   },
-  filters:{
-    formatTime(time){
-        let date = new Date(time);
-        // console.log(date)
-        // console.log(formatDate(date,'yyyy-MM-dd hh:mm'));
-        return formatDate(date,'yyyy-MM-dd hh:mm')
+  filters: {
+    formatTime(time) {
+      let date = new Date(time);
+      // console.log(date)
+      // console.log(formatDate(date,'yyyy-MM-dd hh:mm'));
+      return formatDate(date, 'yyyy-MM-dd hh:mm')
     }
   },
   methods: {
+    // 这里的两个Connect根据子组件发射的数据的来设置数据，而一旦数据发生变化。绑定在评论列表上的needShow方法会根据函数的执行结果判断显示和隐藏哪些数据
+    _middlewareChange() {
+      Connect.$on('change.selectType', (type) => {
+        this.selectType = type;
+        this.$nextTick(() => {
+          this.foodScroll.refresh();
+        })
+      });
+      Connect.$on('change.onlyContent', (onlyContent) => {
+        this.onlyContent = onlyContent;
+        this.$nextTick(() => {
+          this.foodScroll.refresh();
+        })
+      });
+    },
     /**
       评论列表的显示过滤
       1，显示全部并且没有评论时返回false;
