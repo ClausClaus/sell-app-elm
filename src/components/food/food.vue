@@ -36,6 +36,24 @@
         <div class="rating">
           <h1 class="title">商品评价</h1>
           <rating-select :select-type="selectType" :only-content="onlyContent" :desc="desc" :ratings="food.ratings"></rating-select>
+          <div class="rating-wrapper">
+            <ul v-show="food.ratings && food.ratings.length">
+              <template v-for="(rating,index) in food.ratings">
+                <li :key="index" class="rating-item border-1px" v-show="needShow(rating.rateType,rating.text)">
+                  <div class="user">
+                    <span class="username">{{rating.username}}</span>
+                    <img class="avatar" :src="rating.avatar" width="12" height="12">
+                  </div>
+                  <div class="time">{{rating.rateTime | formatTime}}</div>
+                  <p class="text">
+                    <span :class="{'icon-thumb_up':rating.rateType === 0,'icon-thumb_down':rating.rateType === 1}"></span>
+                    {{rating.text}}
+                  </p>
+                </li>
+              </template>
+            </ul>
+            <div class="no-rating" v-show="!food.ratings || !food.ratings.length">暂无评价</div>
+          </div>
         </div>
       </div>
     </div>
@@ -47,6 +65,7 @@ import Connect from '../Connect';
 import cartControl from '../container/cartControl/cartControl';
 import split from '../container/split/split';
 import ratingSelect from '../container/ratingselect/ratingselect';
+import {formatDate} from '../../common/js/date'; // 日期格式化组件
 const POSITIVE = 0; // 好评
 const NEGATIVE = 1; // 差评
 const ALL = 2; // 全部
@@ -64,14 +83,46 @@ export default {
     }
   },
   created() {
+    // 这里的两个Connect根据子组件发射的数据的来设置数据，而一旦数据发生变化。绑定在评论列表上的needShow方法会根据函数的执行结果判断显示和隐藏哪些数据
     Connect.$on('change.selectType', (type) => {
       this.selectType = type;
+      this.$nextTick(() => {
+        this.foodScroll.refresh();
+      })
     });
     Connect.$on('change.onlyContent', (onlyContent) => {
       this.onlyContent = onlyContent;
+      this.$nextTick(() => {
+        this.foodScroll.refresh();
+      })
     });
   },
+  filters:{
+    formatTime(time){
+        let date = new Date(time);
+        // console.log(date)
+        // console.log(formatDate(date,'yyyy-MM-dd hh:mm'));
+        return formatDate(date,'yyyy-MM-dd hh:mm')
+    }
+  },
   methods: {
+    /**
+      评论列表的显示过滤
+      1，显示全部并且没有评论时返回false;
+      2. 评论的查看方式是全部时直接返回true;
+      3. 判断当前的选择类型是否与点击的选择类型一致。根据用户点击返回执行结果
+     */
+    needShow(type, text) {
+      if (this.onlyContent && !text) {
+        return false;
+      }
+      if (this.selectType === ALL) {
+        return true;
+      }
+      else {
+        return type === this.selectType;
+      }
+    },
     addFirst(event) {
       if (!event._constructed) return;
       this.$set(this.food, 'count', 1);
@@ -108,6 +159,7 @@ export default {
 }
 </script>
 <style lang="less" type="text/less" rel="stylesheet/less">
+@import url("../../../src/common/less/mixin/mixin.less");
 .food-container {
   position: fixed;
   left: 0;
@@ -234,6 +286,59 @@ export default {
         margin-left: 18px;
         font-size: 14px;
         color: #07111b;
+      }
+      .rating-wrapper {
+        padding: 0 18px;
+        .rating-item {
+          position: relative;
+          padding: 16px 0;
+          .border-1px(rgba(7, 17, 27, .1));
+          .user {
+            position: absolute;
+            right: 0;
+            top: 16px;
+            line-height: 12px;
+            font-size: 0;
+            .username {
+              display: inline-block;
+              vertical-align: top;
+              margin-right: 6px;
+              font-size: 10px;
+              color: rgb(147, 153, 159);
+            }
+            .avatar {
+              border-radius: 50%;
+            }
+          }
+          .time {
+            margin-bottom: 6px;
+            line-height: 12px;
+            font-size: 10px;
+            color: rgb(147, 153, 159);
+          }
+          .text {
+            line-height: 16px;
+            font-size: 12px;
+            color: rgb(7, 17, 27);
+            .icon-thumb_up,
+            .icon-thumb_down {
+              line-height: 16px;
+              margin-right: 4px;
+              font-size: 12px;
+            }
+            .icon-thumb_up {
+              color: rgb(0, 160, 220);
+            }
+            .icon-thumb_down {
+              color: rgb(147, 153, 159);
+            }
+          }
+        }
+        .no-rating {
+          padding: 16px 0;
+          font-size: 12px;
+          color: rgb(147, 153, 159);
+        }
       }
     }
   }

@@ -66,9 +66,7 @@ export default {
     },
     onlyContent: {
       type: Boolean,
-      default() {
-        return false;
-      }
+      default: false
     },
     desc: {
       type: Object,
