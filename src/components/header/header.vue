@@ -38,11 +38,7 @@
             <div class="star-wrapper">
               <star :size="48" :score="seller.score"></star>
             </div>
-            <div class="title">
-              <div class="line"></div>
-              <div class="text">优惠信息</div>
-              <div class="line"></div>
-            </div>
+            <title-line :text="text1"></title-line>
             <ul v-if="seller.supports" class="supports">
               <template v-for="(item,index) in seller.supports">
                 <li class="support-item" :key="index">
@@ -51,11 +47,7 @@
                 </li>
               </template>
             </ul>
-            <div class="title">
-              <div class="line"></div>
-              <div class="text">商家公告</div>
-              <div class="line"></div>
-            </div>
+            <title-line :text="text2"></title-line>
             <div class="bulletion">
               <p class="content">
                 {{seller.bulletin}}
@@ -72,11 +64,14 @@
 </template>
 <script type="text/ecmascript-6">
 import star from '../container/star/star.vue';
+import titleLine from '../container/title.line/line.vue';
 export default {
   data() {
     return {
       classMap: ['decrease', 'discount', 'guarantee', 'invoice', 'special'],
-      detailShow: false
+      detailShow: false,
+      text1: '优惠信息',
+      text2: '商家公告'
     }
   },
   methods: {
@@ -89,6 +84,7 @@ export default {
   },
   components: {
     star,
+    titleLine
   },
   props: {
     seller: {
@@ -244,8 +240,8 @@ export default {
     left: 0;
     top: 0;
     z-index: 100;
+    opacity: 1;
     background-color: rgba(7, 17, 27, .8);
-    backdrop-filter: blur(10px); // ios才支持
     -webkit-backdrop-filter: blur(10px);
     .detail-wrapper {
       width: 100%;
@@ -263,23 +259,22 @@ export default {
           margin-top: 16px;
           padding: 2px 0;
           text-align: center;
-        }
-        .title {
-          display: flex;
-          width: 80%;
-          margin: 28px auto 24px auto;
-          .line {
-            flex: 1;
-            position: relative;
-            top: -6px;
-            border-bottom: 1px solid rgba(255, 255, 255, .2);
-          }
-          .text {
-            padding: 0 12px;
-            font-size: 14px;
-            font-weight: bold;
-          }
-        }
+        } // .title {
+        //   display: flex;
+        //   width: 80%;
+        //   margin: 28px auto 24px auto;
+        //   .line {
+        //     flex: 1;
+        //     position: relative;
+        //     margin: auto;
+        //     border-bottom: 1px solid rgba(255, 255, 255, .2);
+        //   }
+        //   .text {
+        //     padding: 0 12px;
+        //     font-size: 14px;
+        //     font-weight: bold;
+        //   }
+        // }
         .supports {
           width: 80%;
           margin: 0 auto;

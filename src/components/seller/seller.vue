@@ -94,6 +94,7 @@ export default {
   computed: {
     favoriteText() {
       return this.favorite ? '已收藏' : '收藏'
+      
     }
   },
   created() {
@@ -117,7 +118,6 @@ export default {
     },
     _initPics() {
       if (this.seller.pics) {
-        // console.log(this.seller.pics);
         let picWidth = 120;
         let picMargin = 6;
         let width = (picWidth + picMargin) * this.seller.pics.length - picMargin;
