@@ -16,13 +16,13 @@
       </div>
     </div>
     <div class="ball-container">
-      <transition-group name="drop" @before-enter="ballBeforeEnter" @enter="ballEnter" @after-enter="ballAfterEnter" :css="false">
-        <template v-for="(ball,index) in balls">
-          <div class="ball" v-show="ball.show" :key="index">
+      <div v-for="(ball,index) in balls" :key="index">
+        <transition name="drop" @before-enter="ballBeforeEnter" @enter="ballEnter" @after-enter="ballAfterEnter" :css="false">
+          <div class="ball" v-show="ball.show">
             <div class="inner inner-hook"></div>
           </div>
-        </template>
-      </transition-group>
+        </transition>
+      </div>
     </div>
     <transition name="fold">
       <div class="shopcart-list" v-show="listshow">
@@ -125,19 +125,17 @@ export default {
       this.$nextTick(() => {
         el.style.webkitTransform = 'translate3d(0,0,0)';
         el.style.transform = 'translate3d(0,0,0)';
-        let inner = el.getElementsByClassName('inner-hook')[0]; 
+        let inner = el.getElementsByClassName('inner-hook')[0];
         inner.style.webkitTransform = 'translate3d(0,0,0)';
         inner.style.transform = 'translate3d(0,0,0)';
+        el.addEventListener('transitionend', done);
       });
-      done();
     },
     ballAfterEnter(el) {
       let ball = this.dropBalls.shift();
       if (ball) {
-        setTimeout(function() {
-          ball.show = false;
-          // el.style.display = 'none';
-        }, 400)
+        ball.show = false;
+        el.style.display = 'none';
       }
     }
 
