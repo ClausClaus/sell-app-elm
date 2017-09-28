@@ -59,7 +59,7 @@
           <ul class="pic-list" ref="pic-list">
             <template v-for="(pic,index) in seller.pics">
               <li class="pic-item" :key="index">
-                <img :src="pic" width="120" height="90">
+                <img :src="pic.src" width="120" height="90" @click="$preview.open(index, seller.pics)" class="preview-img">
               </li>
             </template>
           </ul>
@@ -97,8 +97,6 @@ export default {
     }
   },
   created() {
-
-
   },
   methods: {
     toggleFavorite(event) {
@@ -119,6 +117,7 @@ export default {
     },
     _initPics() {
       if (this.seller.pics) {
+        // console.log(this.seller.pics);
         let picWidth = 120;
         let picMargin = 6;
         let width = (picWidth + picMargin) * this.seller.pics.length - picMargin;
@@ -321,6 +320,11 @@ export default {
           &:last-child {
             margin: 0;
           }
+          // .preview-img{
+          //   display: block;
+          //   width: 100%;
+          //   height: 100%;
+          // }
         }
       }
     }

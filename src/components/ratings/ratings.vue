@@ -84,40 +84,48 @@ export default {
       return formatDate(date, 'yyyy-MM-dd hh:mm')
     }
   },
+  watch: {
+    ratings: function() {
+      this._initScroll();
+    }
+  },
   created() {
-    this._initRequest();
+    this.$http.get('/api/ratings')
+      .then(res => {
+        res = res.body;
+        if (res.errno === ERR_OK) {
+          this.ratings = res.data;
+          this.$nextTick(() => {
+            this._initScroll()
+          })
+        }
+      }, res => {
+        console.log('评论列表请求失败');
+      })
     this._middlewareChange();
   },
   methods: {
-    /** 初始化请求数据 */
-    _initRequest() {
-      this.$http.get('/api/ratings')
-        .then(res => {
-          res = res.body;
-          if (res.errno === ERR_OK) {
-            this.ratings = res.data;
-            this.$nextTick(() => {
-              this.ratingsScroll = new BScroll(this.$refs.ratings, {
-                click: true
-              })
-            })
-          }
-        }, res => {
-          console.log('评论列表请求失败');
+    _initScroll() {
+      if (!this.ratingsScroll) {
+        this.ratingsScroll = new BScroll(this.$refs.ratings, {
+          click: true
         })
+      } else {
+        this.ratingsScroll.refresh();
+      }
     },
     // 这里的两个Connect根据子组件发射的数据的来设置数据，而一旦数据发生变化。绑定在评论列表上的needShow方法会根据函数的执行结果判断显示和隐藏哪些数据
     _middlewareChange() {
       Connect.$on('change.selectType', (type) => {
         this.selectType = type;
         this.$nextTick(() => {
-          this.ratingsScroll.refresh();
+          this._initScroll();
         })
       });
       Connect.$on('change.onlyContent', (onlyContent) => {
         this.onlyContent = onlyContent;
         this.$nextTick(() => {
-          this.ratingsScroll.refresh();
+          this._initScroll();
         })
       });
     },
