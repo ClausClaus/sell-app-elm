@@ -30,6 +30,10 @@
             </div>
           </li>
         </ul>
+        <div class="favorite" @click.stop.prevent="toggleFavorite($event)">
+          <span class="icon-favorite" :class="{'active':favorite}"></span>
+          <span class="text" v-text="favoriteText"></span>
+        </div>
       </div>
       <split></split>
       <div class="bulletin">
@@ -51,33 +55,57 @@
       <split></split>
       <div class="pics">
         <h1 class="title">商家实景</h1>
-        <div class="pic-wrapper">
-          <ul class="pic-list">
+        <div class="pic-wrapper" ref="pic-wrapper">
+          <ul class="pic-list" ref="pic-list">
             <template v-for="(pic,index) in seller.pics">
               <li class="pic-item" :key="index">
                 <img :src="pic" width="120" height="90">
               </li>
             </template>
           </ul>
-          </div>
         </div>
       </div>
+      <split></split>
+      <div class="info">
+        <h1 class="title border-1px">商家信息</h1>
+        <ul class="info-list">
+          <template v-for="(info,index) in seller.infos">
+            <li class="info-item" :key="index" v-text="info"></li>
+          </template>
+        </ul>
+      </div>
     </div>
+  </div>
 </template>
 <script type="text/ecmascript-6">
 import BScroll from 'better-scroll';
+import { saveToLocal, loadFromLocal } from '../../common/js/store.js'
 import star from '../container/star/star.vue';
 import split from '../container/split/split.vue';
 export default {
   data() {
     return {
       classMap: ['decrease', 'discount', 'guarantee', 'invoice', 'special'],
+      favorite: (() => {
+        return loadFromLocal(this.seller.id, 'favorite', false); // 从localStorage获取数据
+      })()
+    }
+  },
+  computed: {
+    favoriteText() {
+      return this.favorite ? '已收藏' : '收藏'
     }
   },
   created() {
 
+
   },
   methods: {
+    toggleFavorite(event) {
+      if (!event._constructed) return;
+      this.favorite = !this.favorite;
+      saveToLocal(this.seller.id, 'favorite', this.favorite); // 将数据保存到localStorage
+    },
     _initScroll() {
       this.$nextTick(() => {
         if (!this.sellerScroll) {
@@ -88,15 +116,35 @@ export default {
           this.sellerScroll.refresh();
         }
       })
+    },
+    _initPics() {
+      if (this.seller.pics) {
+        let picWidth = 120;
+        let picMargin = 6;
+        let width = (picWidth + picMargin) * this.seller.pics.length - picMargin;
+        this.$refs['pic-list'].style.width = width + 'px';
+        this.$nextTick(() => {
+          if (!this.picScroll) {
+            this.picScroll = new BScroll(this.$refs['pic-wrapper'], {
+              scrollX: true,
+              eventPassthrough: 'vertical'
+            })
+          } else {
+            this.picScroll.refresh();
+          }
+        })
+      }
     }
   },
   mounted() {
     this._initScroll();
+    this._initPics();
   },
   watch: {
     seller: function() {
       this._initScroll();
-    }
+      this._initPics();
+    },
   },
   props: {
     seller: {
@@ -119,6 +167,7 @@ export default {
   width: 100%;
   overflow: hidden;
   .overview {
+    position: relative;
     padding: 18px;
     .title {
       margin-bottom: 8px;
@@ -168,6 +217,28 @@ export default {
             font-size: 24px;
           }
         }
+      }
+    }
+    .favorite {
+      position: absolute;
+      width: 50px;
+      right: 11px;
+      top: 18px;
+      text-align: center;
+      .icon-favorite {
+        display: block;
+        margin-bottom: 4px;
+        color: #d4d6d9;
+        line-height: 24px;
+        font-size: 24px;
+        &.active {
+          color: #f01414;
+        }
+      }
+      .text {
+        line-height: 10px;
+        font-size: 10px;
+        color: rgb(77, 85, 93);
       }
     }
   }
@@ -225,6 +296,51 @@ export default {
           font-size: 12px;
           color: rgb(7, 17, 27);
         }
+      }
+    }
+  }
+  .pics {
+    padding: 18px;
+    .title {
+      margin-bottom: 12px;
+      line-height: 14px;
+      color: rgb(7, 17, 27);
+      font-size: 14px;
+    }
+    .pic-wrapper {
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      .pic-list {
+        font-size: 0;
+        .pic-item {
+          display: inline-block;
+          margin-right: 6px;
+          width: 120px;
+          height: 90px;
+          &:last-child {
+            margin: 0;
+          }
+        }
+      }
+    }
+  }
+  .info {
+    padding: 18px 18px 0 18px;
+    color: rgb(7, 17, 27);
+    .title {
+      padding-bottom: 12px;
+      line-height: 14px;
+      font-size: 14px;
+      .border-1px(rgba(7, 17, 27, .1));
+    }
+    .info-item {
+      padding: 16px 12px;
+      line-height: 16px;
+      .border-1px(rgba(7, 17, 27, .1));
+      font-size: 12px;
+      &:last-child {
+        .border-none();
       }
     }
   }
