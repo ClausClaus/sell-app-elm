@@ -1,7 +1,38 @@
+body,
+html {
+  line-height: 1;
+  font-weight: 200;
+  font-family: 'PingFang SC', 'STHeitiSC-Light', 'Helvetica-Light', Arial, sans-serif;
+}
+.clearfix {
+  display: inline-block;
+}
+.clearfix:after {
+  display: block;
+  content: '';
+  height: 0;
+  line-height: 0;
+  clear: both;
+  visibility: hidden;
+}
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
+  .border-1px::after,
+  .border-1px::before {
+    -webkit-transform: scaleY(0.7);
+    transform: scaleY(0.7);
+  }
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-device-pixel-ratio: 2) {
+  .border-1px::after,
+  .border-1px::before {
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+  }
+}
 @font-face {
   font-family: 'sell-icon';
-  src: url('../fonts/sell-icon.eot?tmfrhj');
-  src: url('../fonts/sell-icon.eot?tmfrhj#iefix') format('embedded-opentype'), url('../fonts/sell-icon.ttf?tmfrhj') format('truetype'), url('../fonts/sell-icon.woff?tmfrhj') format('woff'), url('../fonts/sell-icon.svg?tmfrhj#sell-icon') format('svg');
+  src: url('../fonts/sell-icon.eot?6u6oal');
+  src: url('../fonts/sell-icon.eot?6u6oal#iefix') format('embedded-opentype'), url('../fonts/sell-icon.ttf?6u6oal') format('truetype'), url('../fonts/sell-icon.woff?6u6oal') format('woff'), url('../fonts/sell-icon.svg?6u6oal#sell-icon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -48,16 +79,4 @@
 }
 .icon-thumb_up:before {
   content: "\e909";
-}
-@media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
-  .border-1px::after {
-    -webkit-transform: scaleY(0.7);
-    transform: scaleY(0.7);
-  }
-}
-@media (-webkit-min-device-pixel-ratio: 2), (min-device-pixel-ratio: 2) {
-  .border-1px::after {
-    -webkit-transform: scaleY(0.5);
-    transform: scaleY(0.5);
-  }
 }

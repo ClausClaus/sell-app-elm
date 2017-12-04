@@ -1,5 +1,11 @@
+
 /**
- * 数据的存
+ * 存储本地数据
+ *
+ * @export
+ * @param {any} id
+ * @param {any} key
+ * @param {any} value
  */
 export function saveToLocal(id, key, value) {
   let seller = window.localStorage.__seller__;
@@ -13,17 +19,24 @@ export function saveToLocal(id, key, value) {
     }
   }
   seller[id][key] = value;
-  window.localStorage.__seller__ = JSON.stringify(seller);
-
+  localStorage.__seller__ = JSON.stringify(seller);
 };
+
+
 /**
- * 数据的取
+ * 读取本地数据
+ *
+ * @export
+ * @param {any} id
+ * @param {any} key
+ * @param {any} def
  */
 export function loadFromLocal(id, key, def) {
   let seller = window.localStorage.__seller__;
   if (!seller) {
     return def;
   }
+
   seller = JSON.parse(seller)[id];
   if (!seller) {
     return def;
@@ -31,3 +44,4 @@ export function loadFromLocal(id, key, def) {
   let ret = seller[key];
   return ret || def;
 };
+

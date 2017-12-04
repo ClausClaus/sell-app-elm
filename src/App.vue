@@ -1,76 +1,67 @@
 <template>
-  <div id="app">
-    <!-- <router-view></router-view> -->
-    <header-vue :seller="seller"></header-vue>
+  <div id="app" class="app-container">
+    <div class="header-contaoner">
+      <vue-header :seller="seller"></vue-header>
+    </div>
     <div class="tab border-1px">
-      <div class="tab-item">
-        <router-link :to="{name:'goods'}">商品</router-link>
-      </div>
-      <div class="tab-item">
-        <router-link :to="{name:'ratings'}">评论</router-link>
-      </div>
-      <div class="tab-item">
-        <router-link :to="{name:'seller'}">商家</router-link>
-      </div>
+      <router-link tag="div" :to="{name:'goods'}" class="tab-item">商品</router-link>
+      <router-link tag="div" :to="{name:'ratings'}" class="tab-item">评价</router-link>
+      <router-link tag="div" :to="{name:'seller'}" class="tab-item">商家</router-link>
     </div>
     <keep-alive>
       <router-view :seller="seller"></router-view>
     </keep-alive>
   </div>
 </template>
-
 <script type="text/ecmascript-6">
-import { urlParse } from './common/js/util.js';
-import HeaderVue from './components/header/header.vue';
-const ERR_OK = 0;
+import VueHeader from '@/components/header/header';
+import { ERROR } from 'api/config';
+import { urlParse } from 'common/js/util.js';
+
 export default {
   data() {
     return {
       seller: {
         id: (() => {
-          let queryPram = urlParse(); // 获取url的查询字符串
-          return queryPram.id;
+          let queryParam = urlParse();
+          return queryParam.id
         })()
-      },
+      }
     }
   },
   created() {
-    this.$http.get('/api/seller/?id=' + this.seller.id)
-      .then(res => {
-        res = res.body;
-        if (res.errno === ERR_OK) {
-          this.seller = Object.assign({}, this.seller, res.data);
-          // console.log(this.seller.id);
-        }
-      }, errno => {
-        console.log('商家数据请求失败');
-      });
+    this.$axios.get('/api/seller').then(res => {
+      if (res.status === ERROR) {
+        this.seller = Object.assign({},this.seller,res.data);
+        // console.log(this.seller.id);
+      }
+    })
   },
+  methods: {},
   components: {
-    HeaderVue
+    VueHeader
   }
 }
 </script>
+<style type="text/less" lang="less" rel="stylesheet/less" charset="UTF-8">
+@import "../static/css/reset.css";
+@import "./common/style/mixin";
 
-<style lang="less" type="text/less" rel="stylesheet/less">
-@import url("./common/less/mixin/mixin.less");
-#app {
+.app-container {
   .tab {
     display: flex;
+    flex-direction: row;
     width: 100%;
     height: 40px;
     line-height: 40px;
-    .border-1px(rgba(7, 17, 27, .1));
+    .border(rgba(7, 17, 27, .1));
     .tab-item {
       flex: 1;
       text-align: center;
-      &>a {
-        display: block;
-        font-size: 14px;
-        color: rgb(77, 85, 93);
-        &.link-active {
-          color: rgb(240, 20, 20);
-        }
+      color: rgb(77, 85, 93);
+      transition: all .2s;
+      &.router-link-active {
+        color: rgb(240, 20, 20);
       }
     }
   }

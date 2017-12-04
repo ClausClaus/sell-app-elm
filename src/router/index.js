@@ -1,16 +1,27 @@
 import Vue from 'vue'
-import Router from 'vue-router'
-import Goods from '@/components/goods/goods';
-import Ratings from '@/components/ratings/ratings';
-import Seller from '@/components/seller/seller';
-Vue.use(Router);
+import Vuerouter from 'vue-router'
 
-export default new Router({
-  linkActiveClass:'link-active',
+Vue.use(Vuerouter)
+const Goods = resolve => {
+  import('@/components/goods/goods').then((module) => {
+    resolve(module)
+  })
+}
+const Ratings = resolve => {
+  import('@/components/ratings/ratings').then((module) => {
+    resolve(module)
+  })
+}
+const Seller = resolve => {
+  import('@/components/seller/seller').then((module) => {
+    resolve(module)
+  })
+}
+export default new Vuerouter({
   routes: [
-    { name: "goods", path: '/goods', component: Goods },
-    { name: 'default', path: '/', redirect: { name: 'goods' } },
-    { name: 'ratings', path: '/ratings', component: Ratings },
-    { name: 'seller', path: '/seller', component: Seller }
+    {path: '/', redirect: {path: '/goods'}},
+    {path: '/goods', name: 'goods', component: Goods},
+    {path: '/ratings', name: 'ratings', component: Ratings},
+    {path: '/seller', name: 'seller', component: Seller}
   ]
 })

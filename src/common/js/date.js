@@ -22,9 +22,9 @@ export function formatDate(date, fmt) {
 /**
  * 根据传入的字符串长度，来分割字符串。
  * 不定义第二个参数，让截取位置从字符串对象的开始位置开始截取
- * 
- * @param {any} str 
- * @returns 
+ *
+ * @param {any} str
+ * @returns
  */
 function padLeftZero(str) {
   return ('00' + str).substr(str.length);

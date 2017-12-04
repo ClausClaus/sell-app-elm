@@ -1,18 +1,23 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import VueResource from 'vue-resource';
-import VuePreview from 'vue-preview';
-import './common/less/index.less'; // 加载全局的css文件
+import VueLazyLoad from 'vue-lazyload'
+import fastclick from 'fastclick'
+import axios from 'axios'
+import "./common/style/index.less"
+// import VuePreview from 'vue-preview'
+// Vue.use(VuePreview, {
+//   hideAnimationDuration:0, showAnimationDuration:0
+// })
+fastclick.attach(document.body)
+Vue.prototype.$axios = axios
 Vue.config.productionTip = false
-Vue.use(VueResource);
-Vue.use(VuePreview);
+Vue.use(VueLazyLoad, {
+  loading: require('common/image/pi-loading.png')
+})
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
-  template: '<App/>',
-  components: { App }
+  render: h => h(App)
 })
